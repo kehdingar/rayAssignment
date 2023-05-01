@@ -1,0 +1,138 @@
+<?php
+include_once 'Session.php';
+include_once 'Product.php';
+include_once 'DVD.php';
+include_once 'Furniture.php';
+include_once 'config/Crud.php';
+include_once 'Book.php';
+
+class Validator
+{
+    private $data;
+    private $crud;
+    private $errors = [];
+    private $no_error = false;
+
+    private $validation_rules;
+
+    // errror messages
+    private $messages = [
+        "required"  => "Please, submit required data",
+        "number"    =>  "Please, provide the data of ",
+        "invalidProdType" => "Invalid product type Please, provide the data of ",
+        "duplicate" => "This value already exist"
+    ];
+
+    public function __construct($data, $validation_rules)
+    {
+        $this->crud = new Crud();
+        $this->data = $data;
+        $this->validation_rules = $validation_rules;
+    }
+
+    public function validate($is_update=false)
+    {
+        foreach ($this->validation_rules as $field => $rule) {
+            $field_value = $this->getFieldValue($field);
+            $rule = ucfirst($rule);
+            $method_to_call = "validate$rule";
+
+            $resultant_message = $this->$method_to_call($field_value,$field,$is_update);
+
+            if ($resultant_message) {
+                $this->addError($resultant_message, $field);
+            }
+        }
+    }
+
+    public function getFieldValue($field)
+    {
+        return $this->data[$field];
+    }
+
+
+    public function validateRequired($value, $field)
+    {
+        return !empty($value) ? $this->no_error : $this->messages['required'];
+    }
+
+
+    public function validateNumber($value, $field)
+    {
+        if (!$value) {
+            return $this->messages['required'];
+        } else {
+            try {
+                $value = intval($value);
+                if (!$value) {
+
+                    return $this->messages['number'] . $field . " (number must be greater than 1)";
+                }
+                return preg_match("/^[0-9]*$/", $value) ? $this->no_error : $this->messages['number'] . $field . " (number must be greater than 1)";
+            } catch (Exception $e) {
+                return preg_match("/^[0-9]*$/", $value) ? $this->no_error : $this->messages['required'] . $field . " (number must be greater than 1)";
+            }
+        }
+    }
+
+    public function validateType($value, $field)
+    {
+        if ($value == "") {
+            return $this->messages['required'];
+        }
+        if (!in_array($value, Product::getChildren(), true)) {
+            return $this->messages['invalidProdType'] . "Product." . " [ $value ] is not valid ";
+        }
+    }
+
+    public function validateSku($value, $field,$is_update)
+    {
+        if ($value == "") {
+            return $this->messages['required'];
+        }
+
+        $sku = Product::getSku();
+        if($is_update){
+
+            $productId = Product::getPrdocutId();
+
+            $query = "SELECT * FROM product WHERE id!='$productId' AND sku='$sku'";
+            $count = count($this->crud->read($query));
+            if ($count) {
+                return $this->messages['duplicate'];
+            }
+        }else{
+
+            $query = "SELECT * FROM product WHERE sku='$sku'";
+            $count = count($this->crud->read($query));
+            if ($count) {
+                return $this->messages['duplicate'];
+            }
+        }
+    }
+
+    public function addError($resultant_message, $field)
+    {
+        $this->errors[$field] = $resultant_message;
+
+        Session::set('errors', $this->errors);
+    }
+
+    public static function getErrorForField($field)
+    {
+        if (Session::exists('errors')) {
+            $errors = Session::get('errors');
+
+            if (key_exists($field, $errors)) {
+                $error = $errors[$field];
+                unset($_SESSION['errors'][$field]);
+                return $error;
+            }
+        }
+    }
+
+    public function validates()
+    {
+        return empty($this->errors);
+    }
+}
