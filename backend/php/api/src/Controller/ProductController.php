@@ -1,10 +1,19 @@
 <?php
 
-require_once "./../model/Product.php";
-require_once "./../model/DVD.php";
-require_once "./../model/Book.php";
-require_once "./../model/Furniture.php";
-include_once "./../model/config/Crud.php";
+namespace ProductProcessing\Controller;
+
+require "../../vendor/autoload.php";
+
+use Product\Model\Product as Product;
+use Product\Model\DVD as DVD;
+use Product\Model\Book as Book;
+use Product\Model\Furniture as Furniture;
+use DataConfig\Model\Config\Crud as Crud;
+use Product\Model\Validator as Validator;
+
+new DVD();
+new Furniture();
+new Book();
 
 class ProductController
 {
@@ -17,7 +26,6 @@ class ProductController
     private array $furnitureData = array();
     private array $dvdDiscData = array();
     private array $productIds = array();
-
 
     public function __construct()
     {
@@ -32,16 +40,6 @@ class ProductController
     public function getType()
     {
         return $this->type;
-    }
-
-    public function getProductHTML()
-    {
-        return $this->type->generatedFields();
-    }
-
-    public function getDescriptionMessage()
-    {
-        return $this->type->getDescriptionMessage();
     }
 
     public function addProduct($data)
@@ -64,7 +62,6 @@ class ProductController
             echo json_encode($response);
         }
     }
-
 
     public function validationBootstrap($data)
     {
@@ -92,12 +89,13 @@ class ProductController
         $this->validation_data = $this->productData;
 
         // checking and calling the appropriate method for the product type that extends Product class
-        if (Product::getType() != '' && in_array(Product::getType(), Product::getChildren())) {
-            $type = Product::getType();
-            $this->setType(new $type);
+        if (Product::getType() != '' && in_array(Product::getType(), array_keys(Product::getChildren()))) {
+            $productClassName = Product::getType();
+            $productNameSpace = Product::getChildren()[$productClassName];
 
+            $this->setType(new $productNameSpace);
             // set up and call appropirate method
-            $productMethodToCall = "add$type";
+            $productMethodToCall = "add$productClassName";
             $productTypeData = $this->$productMethodToCall($data);
 
             $this->validation_data += $productTypeData;
@@ -124,7 +122,6 @@ class ProductController
     {
         $dvdDisc = new DVD();
 
-        //
         $dvdDisc->setSize(json_decode($data['size']), true);
 
         $this->dvdDiscData += ['size' => $dvdDisc->getSize()];
@@ -152,7 +149,6 @@ class ProductController
 
         return $this->furnitureData;
     }
-
 
     public function createBook($productId)
     {

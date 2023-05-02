@@ -1,12 +1,17 @@
 <?php
-include_once "DbConfig.php";
+
+namespace DataConfig\Model\Config;
+
+require '../../vendor/autoload.php';
+
+use DataConfig\Model\Config\DbConfig;
 
 class Crud
 {
     private $conn;
     public function __construct()
-    {    
-        $connection = new DbConfig(); 
+    {
+        $connection = new DbConfig();
         $this->conn = $connection->getDbConnection();
     }
 
@@ -27,7 +32,7 @@ class Crud
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function delete($sqlQuery)
@@ -47,6 +52,4 @@ class Crud
         $stmt = $this->conn->prepare($sqlQuery);
         $stmt->execute();
     }
-
-
 }

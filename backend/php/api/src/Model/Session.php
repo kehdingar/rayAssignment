@@ -1,10 +1,12 @@
 <?php
 
+namespace Product\Model;
+
 class Session
 {
     public static function start()
     {
-        
+
         if (empty($_SESSION)) session_start();
     }
 

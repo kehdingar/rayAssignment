@@ -1,7 +1,6 @@
 <?php
-require_once "Validator.php";
-require_once "./../controller/ProductController.php";
 
+namespace Product\Model;
 
 abstract class Product
 {
@@ -25,27 +24,6 @@ abstract class Product
 
     public abstract static function getDisplayName(): string;
 
-    public abstract function generatedFields(): string;
-
-
-    public function fieldGenerator(array $formFields): string
-    {
-        foreach ($formFields as $field => $unit) {
-            if (!empty($unit)) {
-
-                $this->generatedFields .= '<div class="form-group row">' . '<label class="col-md-1 col-form-label">' . 
-                                        ucfirst($field) . ' (' . $unit . ')</label>' . "\n";
-            } else {
-
-                $this->generatedFields .= '<div class="form-group">' . '<label class="col-md-1 col-form-label">' . 
-                                        ucfirst($field) . '</label>' . "\n";
-            }
-            $this->generatedFields .= '<div class="col-md-4"><input class="form-control" type="' . $this->inputMapper($field) . 
-                                    '" id="' . $field . '" name="' . $field . '" value=""/>' . 
-                                    '<p id="' . $field . 'Error" class="error">' . Validator::getErrorForField($field) . "</p>\n"."</div>.</div>\n";
-        }
-        return $this->generatedFields;
-    }
 
     protected function inputMapper($field): string
     {
@@ -56,10 +34,12 @@ abstract class Product
     {
         $types = array();
         foreach (get_declared_classes() as $type) {
-            if (is_subclass_of($type, 'Product')) {
-                array_push($types, $type);
+            if (is_subclass_of($type, 'Product\\Model\\Product')) {
+                $typeName = explode('\\', $type);
+                $types[end($typeName)] = $type;
             }
         }
+
         return $types;
     }
 
@@ -86,10 +66,8 @@ abstract class Product
     public static function setPrice($price)
     {
         if ($price == null) {
-
             self::$price = 0.00;
         } else {
-
             self::$price = $price;
         }
     }
@@ -109,7 +87,6 @@ abstract class Product
         return self::$type;
     }
 
-
     public static function getPrdocutId()
     {
         return self::$prdocutId;
@@ -117,22 +94,21 @@ abstract class Product
 
     public static function setPrdocutId($prdocutId)
     {
-        $prdocutId == null ? self::$prdocutId = 0: self::$prdocutId = $prdocutId;
-     
+        $prdocutId == null ? self::$prdocutId = 0 : self::$prdocutId = $prdocutId;
     }
 
     public static function getTableMap()
     {
-        $tableMap=[
-            'DVD'=>'dvd_disc',
-            'Book'=>'book',
-            'Furniture'=>'furniture',
+        $tableMap = [
+            'DVD' => 'dvd_disc',
+            'Book' => 'book',
+            'Furniture' => 'furniture',
         ];
         return $tableMap;
     }
 
     public static function getFields()
     {
-        return ['sku','name','price','type'];
+        return ['sku', 'name', 'price', 'type'];
     }
 }

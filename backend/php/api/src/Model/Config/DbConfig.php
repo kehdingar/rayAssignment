@@ -1,5 +1,7 @@
 <?php
 
+namespace DataConfig\Model\Config;
+
 class DbConfig
 {
     function getDbConnection()
@@ -10,15 +12,14 @@ class DbConfig
         $dbname = "scandiweb";
 
         try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $password);
+            $conn = new \PDO("mysql:host=$servername;dbname=$dbname;", $username, $password);
 
             // Set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
             return $conn;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }
     }
-
 }

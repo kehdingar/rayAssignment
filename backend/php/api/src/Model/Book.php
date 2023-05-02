@@ -1,6 +1,6 @@
 <?php
 
-require_once "Product.php";
+namespace Product\Model;
 
 class Book extends Product
 {
@@ -18,21 +18,14 @@ class Book extends Product
 
     public function prepareFormFields(): array
     {
-        foreach($this->formFields as $field => $unit){
-            $fieldData = array($field =>[
+        foreach ($this->formFields as $field => $unit) {
+            $fieldData = array($field => [
                 'unit' => $unit,
                 'type' => $this->inputMapper($field)
             ]);
-            array_push($this->preparedFormFieldData,$fieldData);
+            array_push($this->preparedFormFieldData, $fieldData);
         }
-         return $this->preparedFormFieldData;
-    }
-
-
-    public function generatedFields(): string
-    {
-        // fieldGenerator() in Parent
-        return $this->generatedFields = $this->fieldGenerator($this->formFields);
+        return $this->preparedFormFieldData;
     }
 
     public function getdescriptionMessage(): string
@@ -43,11 +36,6 @@ class Book extends Product
     public function getFormFields(): array
     {
         return $this->formFields;
-    }
-
-    public function getGeneratedFields(): string
-    {
-        return $this->generatedFields;
     }
 
     public static function getDisplayName(): string

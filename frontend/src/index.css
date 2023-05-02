@@ -355,10 +355,10 @@ form .form-control-checkbox:focus {
 @media (max-width: 436px) {
   
   header{
-    justify-content: center;
+    justify-content: space-between;
   }
   .rightMenu .button-one {
-    margin-left: 0;
+    margin-left: 1px;
   }
 
   .rightMenu .cancel {

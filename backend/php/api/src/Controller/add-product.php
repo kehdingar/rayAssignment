@@ -1,12 +1,16 @@
 <?php
+require "../../vendor/autoload.php";
 
-require_once "../model/Session.php";
-require_once "../model/Product.php";
-require_once "ProductController.php";
-require_once "../model/DVD.php";
-require_once "../model/Book.php";
-require_once "../model/config/Crud.php";
-require_once "../model/Furniture.php";
+use Product\Model\Product;
+use Product\Model\Session;
+use Product\Model\Book as Book;
+use Product\Model\DVD as DVD;
+use Product\Model\Furniture as Furniture;
+
+new DVD();
+new Furniture();
+new Book();
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: 'GET'");
 header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
@@ -14,11 +18,13 @@ header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 Session::start();
 
 $products = Product::getChildren();
-$response = array();
-// Get product data for React
-foreach ($products as $productType) {
-    $product = new $productType();
-    $formData = array($productType => [
+
+$response = [];
+
+foreach ($products as $productClass => $productNameSpace) {
+    $product = new $productNameSpace();
+
+    $formData = array($productClass => [
         'formfields' => $product->prepareFormFields(),
         'message' => $product->getdescriptionMessage(),
         'displayName' => $product->getDisplayName()

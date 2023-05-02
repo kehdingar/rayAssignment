@@ -1,5 +1,7 @@
 <?php
 
+namespace Product\Model;
+
 class Furniture extends Product
 {
     protected int $height = 0;
@@ -21,31 +23,19 @@ class Furniture extends Product
 
     public function prepareFormFields(): array
     {
-        foreach($this->formFields as $field => $unit){
-            $fieldData = array($field =>[
+        foreach ($this->formFields as $field => $unit) {
+            $fieldData = array($field => [
                 'unit' => $unit,
                 'type' => $this->inputMapper($field)
             ]);
-            array_push($this->preparedFormFieldData,$fieldData);
+            array_push($this->preparedFormFieldData, $fieldData);
         }
-         return $this->preparedFormFieldData;
-    }
-
-
-    public function generatedFields(): string
-    {
-        // fieldGenerator() in Parent
-        return $this->generatedFields = $this->fieldGenerator($this->formFields);
+        return $this->preparedFormFieldData;
     }
 
     public function getdescriptionMessage(): string
     {
         return "Please, provide dimensions: HxWxL in " . $this->heightUnit;
-    }
-
-    public function getGeneratedFields(): string
-    {
-        return $this->generatedFields;
     }
 
     public static function getDisplayName(): string

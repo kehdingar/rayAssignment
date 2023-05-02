@@ -1,8 +1,11 @@
 <?php
-include_once "../model/config/Crud.php";
-require_once "../model/Product.php";
-require_once "../model/DVD.php";
-require_once "../model/Book.php";
+namespace ProductProcessing\Controller;
+
+require "../../vendor/autoload.php";
+
+use DataConfig\Model\Config\Crud;
+use Product\Model\Book;
+use Product\Model\DVD;
 
 class ListProducts
 {

@@ -1,10 +1,14 @@
 <?php
 
+namespace Product\Model;
+
 class DVD extends Product
 {
     protected int $size = 0;
     private string $sizeUnit = "MB";
     public static string $displayName = "DVD-disk";
+    public array $dvdDiscData = [];
+    public array $validationRules = [];
 
     public function __construct()
     {
@@ -15,31 +19,20 @@ class DVD extends Product
 
     public function prepareFormFields(): array
     {
-        foreach($this->formFields as $field => $unit){
-            $fieldData = array($field =>[
+        foreach ($this->formFields as $field => $unit) {
+            $fieldData = array($field => [
                 'unit' => $unit,
                 'type' => $this->inputMapper($field)
             ]);
-            array_push($this->preparedFormFieldData,$fieldData);
+            array_push($this->preparedFormFieldData, $fieldData);
         }
-         return $this->preparedFormFieldData;
+        return $this->preparedFormFieldData;
     }
 
-
-    public function generatedFields(): string
-    {
-        // fieldGenerator() in Parent
-        return $this->generatedFields = $this->fieldGenerator($this->formFields);
-    }
 
     public function getdescriptionMessage(): string
     {
         return "Please, provide disk space in " . $this->sizeUnit;
-    }
-
-    public function getGeneratedFields(): string
-    {
-        return $this->generatedFields;
     }
 
     public static function getDisplayName(): string

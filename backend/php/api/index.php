@@ -1,6 +1,6 @@
 <?php
 
-header('location: ./controller/list-products.php');
+header('location: ./src/Controller/list-products.php');
 
 // Silence is Golden, Ductape is Silver
 
