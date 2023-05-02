@@ -9,6 +9,7 @@ export default function Add() {
     const navigate = useNavigate()
     const [productData, setProductData] = useState(null)
     const mutableData = useRef(null)
+    const progressBar = useRef()
 
     const hiddenInnerSubmitFormRef = useRef(null);
     const [selected, setSelected] = useState("Type Switcher")
@@ -26,10 +27,15 @@ export default function Add() {
 
     async function getData() {
         try {
+            progressBar.current.classList.toggle('hidden')
             const response = await axios.get(`/add-product.php`);
+            if (response) {
+                progressBar.current.classList.toggle('hidden')
+            }
             setProductData(response.data);
             return response.data
         } catch (error) {
+            progressBar.current.classList.toggle('hidden')
             return error
         }
     }
@@ -47,18 +53,23 @@ export default function Add() {
     })
 
     const onSubmitHandler = async (e) => {
+        progressBar.current.classList.toggle('hidden')
         const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', }
         await axios
             .post(`/process-add-product.php`, values, { headers: headers })
             .then((response) => {
                 if (response.data === "success") {
+                    progressBar.current.classList.toggle('hidden')
                     return navigate('/home')
                 } else {
                     setErrors(response.data.errors)
+                    progressBar.current.classList.toggle('hidden')
+
                 }
             })
             .catch((error) => {
                 return error
+
             });
     };
 
@@ -95,6 +106,9 @@ export default function Add() {
         <div className="top">
             <header>
                 <span>Add</span>
+                <div class="progress">
+                    <div ref={progressBar} className="progress-bar progress-bar-striped progress-bar-animated bg-danger hidden" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="10" style={{ width: "100%" }}>Loading...</div>
+                </div>
                 <div className="rightMenu">
                     {/* <button class="save button-one">Save</button> */}
                     <Link className="save button-one" type="submit" onClick={handleExternalButtonClick}>Save</Link>

@@ -5,11 +5,12 @@ import { useEffect } from 'react'
 import { useDispatch } from "react-redux";
 import { SET_INITIAL_STATE } from "../../redux/actions";
 import { useSelector } from "react-redux"
-
+import { useRef } from "react";
 
 export default function Home() {
 
     const dispatch = useDispatch();
+    const progressBar = useRef()
 
     const { products } = useSelector((state) => {
         return {
@@ -18,8 +19,11 @@ export default function Home() {
     })
 
     async function getProducts() {
+        progressBar.current.classList.toggle('hidden')
         try {
             const response = await axios.get("/list-products.php");
+            progressBar.current.classList.toggle('hidden')
+
             const modifiedProducts = response.data['products'].map((product) => {
                 product['isChecked'] = false
                 return product
@@ -34,9 +38,9 @@ export default function Home() {
                 }
             });
 
-
         } catch (error) {
             console.log("ERROR HERE")
+            progressBar.current.classList.toggle('hidden')
             console.log(error)
             return error
         }
@@ -54,7 +58,6 @@ export default function Home() {
                 selected.push(product.id)
             }
         });
-
 
         const updatedProductList = products.filter((product) => {
             if (!selected.includes(product.id)) {
@@ -79,14 +82,17 @@ export default function Home() {
             })
             .catch((error) => {
                 return error
+
             });
     }
-
 
     return (
         <div className="top">
             <header>
                 <span>Product List</span>
+                <div class="progress">
+                    <div ref={progressBar} className="progress-bar progress-bar-striped progress-bar-animated bg-danger hidden" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="10" style={{ width: "100%" }}>Loading...</div>
+                </div>
                 <div className="rightMenu">
                     <Link to="/add" className="update button-one">ADD</Link>
                     <Link className="mass-delete button-two delete-product-btn" onClick={handleExternalButtonClick}>MASS DELETE</Link>

@@ -317,6 +317,15 @@ form .form-control-checkbox:focus {
   box-shadow: none;
 }
 
+.progress{
+  width: 121px;
+  height: 11px;
+  transform: translate(0px, 18px);
+  border-radius: 2px;
+  background: none;
+  transition: all 1 ease;
+}
+
 
 
 @media (max-width: 1296px) {
@@ -338,6 +347,23 @@ form .form-control-checkbox:focus {
 
   .rightMenu .button-one {
     margin-left: 0;
+  }
+  .progress{
+    transform: translate(0px, 12px);
+  }
+}
+
+@media (max-width: 615px) {
+
+  .progress{
+    transform: translate(0px, 26px);
+  }
+}
+@media (max-width: 558px) {
+
+  .progress{
+    transform: translate(0px, 49px);
+    width: 100%;
   }
 }
 
