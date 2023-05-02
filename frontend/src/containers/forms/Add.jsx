@@ -175,7 +175,7 @@ export default function Add() {
                                                             <div key={index} className="form-group row ">
                                                                 <label className="col-md-1 col-form-label fw-bold" style={{ textTransform: 'capitalize' }}>{Object.keys(field)[0]} <span style={{ fontSize: '11px' }}>{"("}{field[Object.keys(field)[0]].unit}{")"}</span></label>
                                                                 <div className="col-md-4">
-                                                                    <input className="form-control dynamic" type={field[Object.keys(field)[0]].type} id="" name={Object.keys(field)[0]} value={values[Object.keys(field)[0]] || ""} onChange={handleChange} />
+                                                                    <input className="form-control dynamic" type={field[Object.keys(field)[0]].type} id={Object.keys(field)[0]}  name={Object.keys(field)[0]} value={values[Object.keys(field)[0]] || ""} onChange={handleChange} />
                                                                     {errors[Object.keys(field)[0]] && <p id="skuError" className="error">{errors[Object.keys(field)[0]]}</p>}
                                                                 </div>
 
