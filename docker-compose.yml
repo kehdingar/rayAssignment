@@ -18,11 +18,13 @@ services:
     image: mysql:latest
     container_name: mysql
     restart: always
+    env_file:
+    - .env
     environment:
-      MYSQL_USER: scandiwebUser
-      MYSQL_PASSWORD: scandiwebDatabase#
-      MYSQL_ROOT_PASSWORD: scandiwebDatabase#
-      MYSQL_DATABASE: scandiweb
+      MYSQL_USER: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - 3306:3306
     volumes:

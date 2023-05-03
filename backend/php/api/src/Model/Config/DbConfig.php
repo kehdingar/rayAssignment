@@ -2,15 +2,22 @@
 
 namespace DataConfig\Model\Config;
 
+require '../../vendor/autoload.php';
+
+$path = '../../../php_variables.env';
+
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__,$path);
+$dotenv->load();
+
 class DbConfig
 {
     function getDbConnection()
     {
-        $servername = "mysql";
-        $username = "root";
-        $password = "scandiwebDatabase#";
-        $dbname = "scandiweb";
-
+        $servername = $_ENV['DB_SERVERNAME'];
+        $username = $_ENV['DB_USERNAME'];
+        $password = $_ENV['DB_PASSWORD'];
+        $dbname = $_ENV['DB_NAME'];
+        
         try {
             $conn = new \PDO("mysql:host=$servername;dbname=$dbname;", $username, $password);
 
