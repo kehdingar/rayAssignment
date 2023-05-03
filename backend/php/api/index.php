@@ -1,4 +1,6 @@
 <?php
+require 'vendor/autoload.php';
+
 
 header('location: ./src/Controller/list-products.php');
 
