@@ -68,7 +68,7 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: .
+      context: ./frontend
       dockerfile: Dockerfile
     stdin_open: true
     volumes:
