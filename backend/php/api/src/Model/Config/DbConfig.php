@@ -6,8 +6,11 @@ require '../../vendor/autoload.php';
 
 $path = '../../../php_variables.env';
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__,$path);
+
+$dotenv =  \Dotenv\Dotenv::createImmutable(__DIR__,$path);
 $dotenv->load();
+
+
 
 class DbConfig
 {
